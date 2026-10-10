@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "mcp__duckduckgo-search__search",
+      "Bash(docker manifest:*)",
+      "Bash(docker pull:*)",
+      "Bash(docker compose:*)"
+    ]
+  }
+}

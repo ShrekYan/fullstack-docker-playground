@@ -1,19 +1,5 @@
 {
-  "permissions": {
-    "allow": [
-      "WebSearch",
-      "mcp__duckduckgo-search__search",
-      "Bash(docker manifest:*)",
-      "Bash(docker pull:*)",
-      "Bash(docker compose:*)",
-      "Bash(lsof -iTCP:8080 -sTCP:LISTEN -P; docker inspect react-docker-react-prod-1 --format '{{json .HostConfig.PortBindings}} {{.Config.Image}} {{json .NetworkSettings.Ports}}')",
-      "Bash(ls -a /Users/yanjinqiang/Documents/trae_projects/CorpRAG/.github 2>/dev/null; ls /Users/yanjinqiang/Documents/trae_projects/CorpRAG/.github/workflows 2>/dev/null; echo \"---\"; ls /Users/yanjinqiang/Documents/trae_projects/CorpRAG/data/vector-db 2>/dev/null | head; echo \"---\"; find /Users/yanjinqiang/Documents/trae_projects/CorpRAG -maxdepth 2 -iname \"*nginx*\" -not -path \"*/node_modules/*\" -not -path \"*/.history/*\" 2>/dev/null)",
-      "Bash(docker ps:*)",
-      "mcp__duckduckgo-search__fetch_content",
-      "WebFetch(domain:docs.docker.com)",
-      "Bash(claude mcp:*)",
-      "Bash(npx -y @upstash/context7-mcp --help 2>&1 | head -20)",
-      "Bash(python3 -c \"import json; d=json.load\\(open\\('/Users/yanjinqiang/.claude.json'\\)\\); print\\(json.dumps\\(d.get\\('mcpServers',{}\\), indent=2\\)\\)\")"
-    ]
-  }
+    "permissions": {
+        "allow": ["WebSearch", "Read", "Write", "Edit", "Bash(*)"]
+    }
 }

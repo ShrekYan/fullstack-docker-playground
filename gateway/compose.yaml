@@ -1,0 +1,21 @@
+# 网关编排：系统唯一对外入口（8080 前端 + /api、8081 后端直链）
+# 启动：cd gateway && docker compose up -d --build
+
+name: gateway
+
+services:
+  gateway:
+    build:
+      context: ../
+      dockerfile: gateway/Dockerfile
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    restart: unless-stopped
+
+# 外部网络：由人显式管理（docker network create react-docker-net），
+# 不随本项目的 up/down 创建或删除
+networks:
+  default:
+    name: react-docker-net
+    external: true

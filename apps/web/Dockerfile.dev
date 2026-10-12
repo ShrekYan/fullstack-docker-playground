@@ -1,0 +1,12 @@
+# web 开发镜像：cd apps/web && docker compose --profile dev up
+FROM node:24-alpine3.22
+
+WORKDIR /app
+
+# monorepo 关键：npm ci 需要根和所有 workspace 的 package.json 都在场
+COPY package.json package-lock.json ./
+COPY apps/web/package.json apps/web/
+COPY apps/server/package.json apps/server/
+RUN npm ci
+
+COPY . .

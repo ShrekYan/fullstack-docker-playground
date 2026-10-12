@@ -24,3 +24,15 @@ docs/*
 *.njsproj
 *.sln
 *.sw?
+
+# Nx
+.nx
+**/dist
+
+
+
+.nx/cache
+.nx/workspace-data
+.nx/migrate-runs
+.claude/worktrees
+.claude/settings.local.json

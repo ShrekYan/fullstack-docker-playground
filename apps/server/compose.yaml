@@ -1,0 +1,39 @@
+name: server
+
+services:
+  # 开发模式：cd apps/server && docker compose --profile dev up
+  server-dev:
+    profiles: [dev]
+    build:
+      # context 必须是仓库根（npm workspaces 需要）
+      context: ../..
+      dockerfile: apps/server/Dockerfile.dev
+    command: npm run dev -w apps/server
+    ports:
+      - "3000:3000"
+    volumes:
+      # 相对路径以本文件所在目录为基准，挂载仓库根
+      - ../..:/app
+      # 匿名卷防止宿主 node_modules 覆盖容器内的
+      - /app/node_modules
+
+  # 生产模式：cd apps/server && docker compose --profile prod up -d --build
+  server-prod:
+    profiles: [prod]
+    build:
+      context: ../..
+      dockerfile: apps/server/Dockerfile
+    # 不映射宿主端口：只能通过 gateway 访问
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          # gateway nginx.conf 中 proxy_pass http://api:3000 使用该别名
+          - api
+
+# 外部网络：由人显式管理（docker network create react-docker-net），
+# 与 gateway、apps/web 共享，不随本项目创建/删除
+networks:
+  default:
+    name: react-docker-net
+    external: true

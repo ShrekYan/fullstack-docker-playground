@@ -1,0 +1,44 @@
+name: web
+
+services:
+  # 开发模式：cd apps/web && docker compose --profile dev up
+  web-dev:
+    profiles: [dev]
+    build:
+      # context 必须是仓库根（npm workspaces 需要）
+      context: ../..
+      dockerfile: apps/web/Dockerfile.dev
+    command: npm run dev -w apps/web
+    ports:
+      - "5173:5173"
+    environment:
+      # Vite proxy 目标：共享网络上的后端服务名（server 项目）
+      API_PROXY_TARGET: http://server-dev:3000
+    volumes:
+      # 相对路径以本文件所在目录为基准，挂载仓库根
+      - ../..:/app
+      # 匿名卷防止宿主 node_modules 覆盖容器内的
+      - /app/node_modules
+    # 注意：跨 compose 文件无法 depends_on，Vite proxy 按请求解析目标，后端晚启动无影响
+
+  # 生产模式：cd apps/web && docker compose --profile prod up -d --build
+  web-prod:
+    profiles: [prod]
+    build:
+      context: ../..
+      dockerfile: apps/web/Dockerfile
+    # 不映射宿主端口：外部流量统一走 gateway 容器
+    restart: unless-stopped
+    networks:
+      default:
+        aliases:
+          # gateway nginx.conf 中 proxy_pass http://webapp:8080 使用该别名
+          # 注：不能用 web，Docker 内置 DNS 保留名
+          - webapp
+
+# 外部网络：由人显式管理（docker network create react-docker-net），
+# 与 gateway、apps/server 共享，不随本项目创建/删除
+networks:
+  default:
+    name: react-docker-net
+    external: true

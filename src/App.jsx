@@ -2,6 +2,7 @@ import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
+import { config } from './config'
 import './App.css'
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
         </div>
         <div>
           <h1>Get started</h1>
+          <div>API URL: {config.apiUrl}</div>
           <p>
             Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
           </p>

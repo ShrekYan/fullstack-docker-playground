@@ -25,6 +25,12 @@ services:
       dockerfile: apps/server/Dockerfile
     # 不映射宿主端口：只能通过 gateway 访问
     restart: unless-stopped
+    # 日志轮转：json-file 默认不轮转会撑爆磁盘，必须显式限制
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
     networks:
       default:
         aliases:

@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
 import viteLogo from './assets/vite.svg'
-import { config } from './config'
 import './App.css'
 
 function App() {
@@ -10,7 +9,7 @@ function App() {
   const [hello, setHello] = useState(null)
 
   useEffect(() => {
-    fetch(`${config.apiUrl}/hello`)
+    fetch('/api/hello')
       .then((res) => res.json())
       .then(setHello)
       .catch(() => setHello({ message: 'API 请求失败', timestamp: '-' }))
@@ -26,7 +25,6 @@ function App() {
         </div>
         <div>
           <h1>Get started !</h1>
-          <div>API URL: {config.apiUrl}</div>
           <div>
             Message: {hello ? hello.message : '加载中...'} | Timestamp:{' '}
             {hello ? hello.timestamp : '-'}

@@ -10,7 +10,9 @@
       "mcp__context7__query-docs",
       "mcp__duckduckgo-search__search",
       "WebFetch(domain:docs.docker.com)",
-      "mcp__duckduckgo-search__fetch_content"
+      "mcp__duckduckgo-search__fetch_content",
+      "WebFetch(domain:stackoverflow.com)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

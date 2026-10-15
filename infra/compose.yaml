@@ -1,0 +1,14 @@
+name: infra
+
+services:
+  net-init:
+    image: busybox:latest
+    command: ["true"]
+    restart: "no"
+    networks:
+      - react-docker-net
+
+networks:
+    react-docker-net:
+      name: react-docker-net
+      driver: bridge

@@ -12,6 +12,12 @@ services:
       - "8080:8080"
       - "8081:8081"
     restart: unless-stopped
+    # 日志轮转：json-file 默认不轮转会撑爆磁盘，必须显式限制
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
 
 # 外部网络：由人显式管理（docker network create react-docker-net），
 # 不随本项目的 up/down 创建或删除

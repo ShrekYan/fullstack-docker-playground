@@ -1,0 +1,11 @@
+name: vol-demo 
+
+services:
+  demo:
+    image: busybox:latest
+    command: sh -c 'echo "hello $(date)" >> /data/hello.txt && cat /data/hello.txt && sleep 3600'
+    volumes:
+      - mydata:/data
+volumes:
+  mydata:
+    external: true

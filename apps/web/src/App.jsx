@@ -9,12 +9,12 @@ function App() {
   const [hello, setHello] = useState(null)
 
   useEffect(() => {
-    fetch('/api/hello')
+    fetch('/api/v1/hello')
       .then((res) => res.json())
       .then(setHello)
       .catch(() => setHello({ message: 'API 请求失败', timestamp: '-' }))
-  }, [])
-
+  }, []);
+  
   return (
     <>
       <section id="center">

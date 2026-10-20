@@ -1,5 +1,6 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "packageManager": "pnpm@10.15.0",
   "targetDefaults": {
     "build": {
       "cache": true
@@ -10,5 +11,6 @@
     "lint": {
       "cache": true
     }
-  }
+  },
+  "analytics": true
 }

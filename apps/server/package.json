@@ -11,6 +11,8 @@
     "@nestjs/common": "^11.0.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
+    "@nestjs/terminus": "^12.1.0",
+    "@nestjs/swagger": "^11.4.6",
     "nestjs-pino": "^4.2.0",
     "pino": "^9.7.0",
     "pino-http": "^10.4.0",

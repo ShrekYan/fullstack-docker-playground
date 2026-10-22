@@ -5,10 +5,10 @@ services:
   web-dev:
     profiles: [dev]
     build:
-      # context 必须是仓库根（npm workspaces 需要）
+      # context 必须是仓库根（pnpm workspace 需要）
       context: ../..
       dockerfile: apps/web/Dockerfile.dev
-    command: npm run dev -w apps/web
+    command: pnpm --filter ./apps/web dev
     ports:
       - "5173:5173"
     environment:

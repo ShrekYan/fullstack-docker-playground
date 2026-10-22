@@ -5,10 +5,10 @@ services:
   server-dev:
     profiles: [dev]
     build:
-      # context 必须是仓库根（npm workspaces 需要）
+      # context 必须是仓库根（pnpm workspace 需要）
       context: ../..
       dockerfile: apps/server/Dockerfile.dev
-    command: npm run dev -w apps/server
+    command: pnpm --filter ./apps/server dev
     ports:
       - "3000:3000"
     volumes:
@@ -36,6 +36,11 @@ services:
         aliases:
           # gateway nginx.conf 中 proxy_pass http://api:3000 使用该别名
           - api
+    volumes:
+      - server-logs:/app/logs
+
+volumes:
+  server-logs:
 
 # 外部网络：由人显式管理（docker network create react-docker-net），
 # 与 gateway、apps/web 共享，不随本项目创建/删除
@@ -43,3 +48,6 @@ networks:
   default:
     name: react-docker-net
     external: true
+
+
+

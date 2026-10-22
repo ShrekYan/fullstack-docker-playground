@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { NestFactory } from "@nestjs/core";
 import { ValidationPipe, VersioningType } from "@nestjs/common";
-import { Logger } from "nestjs-pino";
+import { Logger,LoggerErrorInterceptor} from "nestjs-pino";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
 
 
@@ -16,6 +16,7 @@ async function bootstrap() {
     // logger 配置
     const logger = app.get(Logger);
     app.useLogger(logger);
+    app.useGlobalInterceptors(new LoggerErrorInterceptor());
     app.setGlobalPrefix("api");
     app.enableCors({ origin: "*" });
 

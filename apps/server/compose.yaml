@@ -20,6 +20,10 @@ services:
   # 生产模式：cd apps/server && docker compose --profile prod up -d --build
   server-prod:
     profiles: [prod]
+    environment:
+      NODE_ENV: production
+      LOG_LEVEL: info
+      LOG_BODY: "false"
     build:
       context: ../..
       dockerfile: apps/server/Dockerfile
@@ -41,6 +45,7 @@ services:
 
 volumes:
   server-logs:
+    driver: local
 
 # 外部网络：由人显式管理（docker network create react-docker-net），
 # 与 gateway、apps/web 共享，不随本项目创建/删除

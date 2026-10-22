@@ -19,10 +19,37 @@ export function generateRequestId(headerValue: string | string[] | undefined) {
     return incoming ?? randomUUID();
 }
 
+export type AppLogLevel = "info" | "warn" | "error";
+
+/** HTTP 状态码 → 日志级别 */
+export function levelForStatus(status: number): AppLogLevel {
+    if (status >= 500) return "error";
+    if (status >= 400) return "warn";
+    return "info";
+}
+
+/** 循环引用安全的截断：任何值转成安全字符串且限制长度 */
+export function safeTruncate(value: unknown): unknown {
+    if (value === undefined) return undefined;
+    if (value === null) return null;
+    let str: string;
+    if (typeof value === "string") {
+        str = value;
+    } else {
+        try {
+            str = JSON.stringify(value) ?? String(value);
+        } catch {
+            // 循环引用或 BigInt 等 JSON.stringify 失败的场景
+            str = String(value);
+        }
+    }
+    return str.length > MAX_BODY_LENGTH ? str.slice(0, MAX_BODY_LENGTH) + "...(truncated)" : str;
+}
+
 /**
  * 递归脱敏对象中的敏感字段
- * @param value 
- * @returns 
+ * @param value
+ * @returns
  */
 export function redactObject(value: unknown): unknown {
     if (Array.isArray(value)) return value.map(redactObject);

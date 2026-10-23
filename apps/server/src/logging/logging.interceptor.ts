@@ -2,7 +2,7 @@ import { CallHandler, ExecutionContext, Injectable, NestInterceptor } from "@nes
 import type { Request, Response } from "express";
 import type { Logger as PinoLogger } from "pino";
 import { tap } from "rxjs/operators";
-import { HEALTH_PREFIX, LOG_BODY, redactObject, safeTruncate } from "./logging.config";
+import { HEALTH_PREFIX, LOG_BODY,sanitizeLogValue } from "./logging.config";
 
 type RequestWithLog = Request & { log?: PinoLogger };
 
@@ -27,7 +27,7 @@ export class LoggingInterceptor implements NestInterceptor {
         return next.handle().pipe(
             tap((data) => {
                 if (LOG_BODY) {
-                    res.locals.responseBody = safeTruncate(redactObject(data));
+                    res.locals.responseBody = sanitizeLogValue(data);
                 }
             }),
         );

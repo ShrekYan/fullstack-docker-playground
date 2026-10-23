@@ -3,6 +3,9 @@ import { NestFactory } from "@nestjs/core";
 import { ValidationPipe, VersioningType } from "@nestjs/common";
 import { Logger} from "nestjs-pino";
 import { SwaggerModule, DocumentBuilder } from "@nestjs/swagger";
+import { registerProcessErrorHandlers } from "./logging/process-handlers";
+
+registerProcessErrorHandlers();
 
 
 import { AppModule } from "./app.module";
@@ -37,10 +40,12 @@ async function bootstrap() {
 
     const swaggerDocument = new DocumentBuilder().setTitle("React Docker").setDescription("React Docker API").setVersion("1.0").build();
     const document = SwaggerModule.createDocument(app, swaggerDocument);
-    SwaggerModule.setup("docs", app, document);
-    
+    // Swagger 路由不吃 global prefix，这里显式写 "api/docs"，
+    // 才能命中网关 8080 的 /api 转发规则
+    SwaggerModule.setup("api/docs", app, document);
+
     await app.listen(process.env.PORT ?? 3000, "0.0.0.0");
-    logger.log(`CorpRAG HTTP service listening on :${process.env.PORT ?? 3000}`);
-    logger.log(`Swagger UI available at http://localhost:${process.env.PORT ?? 3000}/docs`);
+    logger.log(`React Docker HTTP service listening on :${process.env.PORT ?? 3000}`);
+    logger.log(`Swagger UI available at http://localhost:${process.env.PORT ?? 3000}/api/docs`);
 }
 bootstrap();

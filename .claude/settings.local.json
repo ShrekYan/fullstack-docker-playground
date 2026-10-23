@@ -13,7 +13,12 @@
       "mcp__duckduckgo-search__fetch_content",
       "WebFetch(domain:stackoverflow.com)",
       "WebFetch(domain:github.com)",
-      "mcp__ide__getDiagnostics"
+      "mcp__ide__getDiagnostics",
+      "WebFetch(domain:juejin.cn)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:docs.nestjs.com)",
+      "WebFetch(domain:app.unpkg.com)",
+      "WebFetch(domain:vikulin-va.ru)"
     ]
   }
 }

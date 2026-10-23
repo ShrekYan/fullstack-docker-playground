@@ -4,6 +4,8 @@ services:
   # 开发模式：cd apps/server && docker compose --profile dev up
   server-dev:
     profiles: [dev]
+    environment:
+      TZ: Asia/Shanghai
     build:
       # context 必须是仓库根（pnpm workspace 需要）
       context: ../..
@@ -21,9 +23,10 @@ services:
   server-prod:
     profiles: [prod]
     environment:
+      TZ: Asia/Shanghai
       NODE_ENV: production
       LOG_LEVEL: info
-      LOG_BODY: "false"
+      LOG_BODY: "true"
     build:
       context: ../..
       dockerfile: apps/server/Dockerfile

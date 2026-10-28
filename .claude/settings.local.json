@@ -18,7 +18,8 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:docs.nestjs.com)",
       "WebFetch(domain:app.unpkg.com)",
-      "WebFetch(domain:vikulin-va.ru)"
+      "WebFetch(domain:vikulin-va.ru)",
+      "mcp__codegraph__codegraph_explore"
     ]
   }
 }

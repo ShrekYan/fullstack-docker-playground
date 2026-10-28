@@ -1,5 +1,5 @@
 # ---- 构建阶段：编译前端 ----
-FROM node:24-alpine3.22 AS build
+FROM node:24.16.0-alpine3.22 AS build
 
 WORKDIR /app
 

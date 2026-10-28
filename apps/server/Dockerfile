@@ -1,5 +1,5 @@
 # ---- 构建阶段：编译 NestJS ----
-FROM node:24-alpine3.22 AS build
+FROM node:24.16.0-alpine3.22 AS build
 
 WORKDIR /app
 
@@ -18,7 +18,7 @@ COPY apps/server apps/server
 RUN pnpm --filter ./apps/server build
 
 # ---- 运行阶段：仅生产依赖 ----
-FROM node:24-alpine3.22
+FROM node:24.16.0-alpine3.22
 
 WORKDIR /app
 
@@ -32,11 +32,10 @@ COPY apps/server/package.json apps/server/
 #             运行时让 app.module.ts 走生产日志分支（跳过 dev 专用 pino-pretty）
 ENV COREPACK_NPM_REGISTRY=https://registry.npmmirror.com
 ENV npm_config_registry=https://registry.npmmirror.com
-ENV NODE_ENV=production
 RUN corepack enable && pnpm --filter ./apps/server... install --frozen-lockfile --prod
 
 COPY --from=build /app/apps/server/dist apps/server/dist
 
 EXPOSE 3000
 
-CMD ["node", "apps/server/dist/main.js"]
+CMD ["node","--max-old-space-size=384","apps/server/dist/main.js"]

@@ -12,7 +12,8 @@
       "WebFetch(domain:docs.docker.com)",
       "mcp__duckduckgo-search__fetch_content",
       "WebFetch(domain:stackoverflow.com)",
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "mcp__codegraph__codegraph_explore"
     ]
   }
 }

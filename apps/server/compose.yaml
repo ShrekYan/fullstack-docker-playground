@@ -22,6 +22,9 @@ services:
   # 生产模式：cd apps/server && docker compose --profile prod up -d --build
   server-prod:
     profiles: [prod]
+    image: server-prod:v1.0.0
+    mem_limit: 512m
+    memswap_limit: 512m
     environment:
       TZ: Asia/Shanghai
       NODE_ENV: production
@@ -32,6 +35,14 @@ services:
       dockerfile: apps/server/Dockerfile
     # 不映射宿主端口：只能通过 gateway 访问
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD","node","-e","fetch('http://localhost:3000/api/v1/health/liveness').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 30s
+      disable: false
+
     # 日志轮转：json-file 默认不轮转会撑爆磁盘，必须显式限制
     logging:
       driver: json-file

@@ -29,6 +29,11 @@ services:
       dockerfile: apps/web/Dockerfile
     # 不映射宿主端口：外部流量统一走 gateway 容器
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://localhost:8080/ || exit 1"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
     # 日志轮转：json-file 默认不轮转会撑爆磁盘，必须显式限制
     logging:
       driver: json-file

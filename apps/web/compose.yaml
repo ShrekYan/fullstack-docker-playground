@@ -30,11 +30,24 @@ services:
       dockerfile: apps/web/Dockerfile
     # 不映射宿主端口：外部流量统一走 gateway 容器
     restart: unless-stopped
+    # 资源限额：CPU 上限（静态文件 + 反代，0.5 核足够）
+    cpus: 0.5
+    # 资源限额：内存上限，禁 swap，超限快速失败由 restart 拉起
+    mem_limit: 128m
+    memswap_limit: 128m
+    # 容器可写层限额：即使配置失误也不会撑爆宿主机磁盘（需 overlay2 支持）
+    # 业界参考：简单 web 容器 ~2G，通用默认 10G；这里持久写入已走 volume/tmpfs，2G 仅兜底意外写入
+    storage_opt:
+      size: 2G
+    # 内存文件系统：nginx 暂存请求体/代理缓存写这里，不占磁盘额度，容器停止即消失
+    tmpfs:
+      - /tmp
     healthcheck:
       test: ["CMD-SHELL", "curl -fsS http://localhost:8080/ || exit 1"]
       interval: 30s
       timeout: 3s
       retries: 3
+      start_period: 10s
     # 日志轮转：json-file 默认不轮转会撑爆磁盘，必须显式限制
     logging:
       driver: json-file

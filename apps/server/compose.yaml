@@ -22,6 +22,9 @@ services:
   server-prod:
     profiles: [prod]
     image: ${DOCKER_USER:?need DOCKER_USER in .env}/react-docker-server:${IMAGE_TAG:?need IMAGE_TAG in .env}
+    # 资源限额：CPU 上限（NestJS 单进程，1 核足够）
+    cpus: 1.0
+    # 资源限额：内存上限，禁 swap，超限快速失败由 restart 拉起
     mem_limit: 512m
     memswap_limit: 512m
     environment:
@@ -29,6 +32,9 @@ services:
       NODE_ENV: production
       LOG_LEVEL: info
       LOG_BODY: "true"
+      # V8 堆上限设为 mem_limit(512m) 的 ~75%，留出 Buffer/栈等非堆内存余量，
+      # 让 V8 在容器被 OOM kill 之前先触发 GC（IBM Node 容器实践）
+      NODE_OPTIONS: "--max-old-space-size=384"
     build:
       context: ../..
       dockerfile: apps/server/Dockerfile
@@ -41,6 +47,14 @@ services:
       retries: 3
       start_period: 30s
       disable: false
+
+    # 容器可写层限额（需 overlay2 支持）：日志走 volume、临时文件走 tmpfs
+    # 业界参考：简单应用容器 ~2G，通用默认 10G；这里 2G 仅兜底意外写入
+    storage_opt:
+      size: 2G
+    # 内存文件系统：临时文件写内存，不占磁盘额度，容器停止即消失
+    tmpfs:
+      - /tmp
 
     # 日志轮转：json-file 默认不轮转会撑爆磁盘，必须显式限制
     logging:

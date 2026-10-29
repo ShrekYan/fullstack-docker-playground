@@ -5,6 +5,7 @@ name: gateway
 
 services:
   gateway:
+    image: ${DOCKER_USER:?need DOCKER_USER in .env}/react-docker-gateway:${IMAGE_TAG:?need IMAGE_TAG in .env}
     build:
       context: ../
       dockerfile: gateway/Dockerfile

@@ -24,6 +24,7 @@ services:
   # 生产模式：cd apps/web && docker compose --profile prod up -d --build
   web-prod:
     profiles: [prod]
+    image: ${DOCKER_USER:?need DOCKER_USER in .env}/react-docker-web:${IMAGE_TAG:?need IMAGE_TAG in .env}
     build:
       context: ../..
       dockerfile: apps/web/Dockerfile

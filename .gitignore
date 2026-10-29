@@ -24,6 +24,7 @@ docs/*
 *.njsproj
 *.sln
 *.sw?
+*.env
 
 # Nx
 .nx

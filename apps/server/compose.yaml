@@ -18,11 +18,10 @@ services:
       - ../..:/app
       # 匿名卷防止宿主 node_modules 覆盖容器内的
       - /app/node_modules
-
   # 生产模式：cd apps/server && docker compose --profile prod up -d --build
   server-prod:
     profiles: [prod]
-    image: server-prod:v1.0.0
+    image: ${DOCKER_USER:?need DOCKER_USER in .env}/react-docker-server:${IMAGE_TAG:?need IMAGE_TAG in .env}
     mem_limit: 512m
     memswap_limit: 512m
     environment:

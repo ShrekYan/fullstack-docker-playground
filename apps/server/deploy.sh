@@ -13,8 +13,16 @@ if [ ! -f .env ]; then
 fi
 
 # 版本号从 checkout 的 git tag 推导——这就是"部署机不手填版本"的机制
-export IMAGE_TAG=$(git describe --tags --exact-match)   # 在 tag 上输出版本号；在 main 上输出为空
+IMAGE_TAG=$(git describe --tags --exact-match)     # 在 tag 上输出版本号；在 main 上输出为空
 [ -n "$IMAGE_TAG" ] || { echo "不在 tag 上，禁止部署"; exit 1; }
+
+# 写入 .env（compose 会自动读取），已存在则原位更新，不覆盖其他变量
+if grep -q '^IMAGE_TAG=' .env; then
+  sed -i.bak "s/^IMAGE_TAG=.*/IMAGE_TAG=$IMAGE_TAG/" .env && rm -f .env.bak
+else
+  echo "IMAGE_TAG=$IMAGE_TAG" >> .env
+fi
+export IMAGE_TAG
 
 echo "部署版本：$IMAGE_TAG"
 

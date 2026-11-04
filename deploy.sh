@@ -9,6 +9,9 @@ set -euo pipefail
 
 cd "$(dirname "$0")"
 
+# 部署机可能是新 clone / 浅克隆，本地没有 tags 会让 git describe 直接失败
+git fetch --tags --quiet 2>/dev/null || echo "警告：拉取 tags 失败，使用本地 tags"
+
 # 版本号从 checkout 的 git tag 推导，三个项目共用同一个 IMAGE_TAG
 IMAGE_TAG=$(git describe --tags --exact-match)
 [ -n "$IMAGE_TAG" ] || { echo "不在 tag 上，禁止部署"; exit 1; }
@@ -33,6 +36,10 @@ for dir in apps/server apps/web gateway; do
   upsert_env "$dir/.env" DOCKER_USER shreak
   upsert_env "$dir/.env" IMAGE_TAG "$IMAGE_TAG"
 done
+
+# 三个 compose 都声明 external: true，全新部署机没有这个网络会直接起不来
+docker network inspect react-docker-net >/dev/null 2>&1 \
+  || { echo "创建 Docker 网络 react-docker-net"; docker network create react-docker-net; }
 
 # ---------- 1. server ----------
 ./apps/server/deploy.sh
@@ -61,10 +68,11 @@ else
   docker compose up -d --wait
 fi
 
-cd ../..
+cd ..
 
 # ---------- 4. 全链路验证（经 gateway 入口）----------
-docker compose --project-directory gateway ps
+# -f 显式给文件：部分 compose 版本 --project-directory 不改变文件搜索路径
+docker compose -f gateway/compose.yaml --project-directory gateway ps
 curl -fsS http://localhost:8081/api/v1/health/liveness   # 后端链路
 curl -fsS -o /dev/null http://localhost:8080/            # 前端链路
 echo "✅ 部署成功：${IMAGE_TAG}（server + web + gateway）"

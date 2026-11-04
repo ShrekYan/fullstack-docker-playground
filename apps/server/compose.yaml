@@ -50,10 +50,6 @@ services:
       start_period: 30s
       disable: false
 
-    # 容器可写层限额（需 overlay2 支持）：日志走 volume、临时文件走 tmpfs
-    # 业界参考：简单应用容器 ~2G，通用默认 10G；这里 2G 仅兜底意外写入
-    storage_opt:
-      size: 2G
     # 内存文件系统：临时文件写内存，不占磁盘额度，容器停止即消失
     tmpfs:
       - /tmp

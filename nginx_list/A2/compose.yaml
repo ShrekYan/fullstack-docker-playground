@@ -1,0 +1,24 @@
+services:
+  web:
+    image: nginx:1.28.0-alpine3.21
+    container_name: a2-web
+    volumes:
+      - ./web.conf:/etc/nginx/conf.d/default.conf
+
+  forward:
+    image: nginx:1.28.0-alpine3.21
+    container_name: a2-forward
+    ports:
+      - "8082:80"
+    volumes:
+      - ./forward.conf:/etc/nginx/conf.d/default.conf
+
+  reverse:
+    image: nginx:1.28.0-alpine3.21
+    container_name: a2-reverse
+    ports:
+      - "8083:80"
+    volumes:
+      - ./reverse.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - web

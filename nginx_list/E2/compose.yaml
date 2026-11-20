@@ -1,0 +1,11 @@
+services:
+  nginx:
+    image: nginx:1.28.0-alpine3.21
+    container_name: e2-nginx
+    ports:
+      - "8444:443"     # 只发叶证书
+      - "8445:444"     # 发 fullchain
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./conf.d:/etc/nginx/conf.d:ro
+      - ./certs:/etc/nginx/certs:ro
